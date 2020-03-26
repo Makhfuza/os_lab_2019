@@ -42,3 +42,8 @@ end_ptr--;
 //gcc main.c libMY_STATIC.a - компановка программы с использованием статической библиотеки
 // ./a.out makhfuza  - вызов программы
 
+// создание динамической библиотеки
+// gcc -fPIC -c revert_string.c -o Revert_string.o 
+// gcc -shared -o libMY_DYNAMIC.so Revert_string.o  - -shared - предписывает создать динамическую библиотеку.
+//gcc main.c libMY_DINAMIC.so -o -lRevert_string
+// ./a.out makhfuza
