@@ -1,14 +1,36 @@
 #include "revert_string.h"
 #include <stdio.h>
+#include <string.h>
 #include <locale.h>
 
 void RevertString(char *str)
 {
-int i=0,len=0;
-while (str[i++])len++; //в этом цикле узнаем длину строки
+int l, i;
+char *begin_ptr, *end_ptr, ch;
 
-for(i=len-1;i>=0;i--)
-{
-printf("%c",str[i]);
+// Get the length of the string
+l = strlen(str);
+
+// Set the begin_ptr and end_ptr
+// initially to start of string
+begin_ptr = str;
+end_ptr = str;
+
+// Move the end_ptr to the last character
+for (i = 0; i < l - 1; i++)
+end_ptr++;
+
+// Swap the char from start and end
+// index using begin_ptr and end_ptr
+for (i = 0; i < l / 2; i++) {
+
+// swap character
+ch = *end_ptr;
+*end_ptr = *begin_ptr;
+*begin_ptr = ch;
+
+// update pointers positions
+begin_ptr++;
+end_ptr--;
 }
 }
