@@ -34,3 +34,11 @@ begin_ptr++;
 end_ptr--;
 }
 }
+
+// создание статической библиотеки
+//gcc -c revert_string.c -o revert_string.o
+// ar rc libMY_STATIC.a revert_string.o
+// ranlib libMY_STATIC.a
+//gcc main.c libMY_STATIC.a - компановка программы с использованием статической библиотеки
+// ./a.out makhfuza  - вызов программы
+
