@@ -20,7 +20,6 @@
 #include <semaphore.h> 
 #include <unistd.h>
 sem_t mutex;
-
 void do_one_thing(int *);
 void do_another_thing(int *);
 void do_wrap_up(int);
@@ -53,7 +52,7 @@ int main() {
     perror("pthread_join");
     exit(1);
   }
-   sem_destroy(&mutex); 
+  sem_destroy(&mutex); 
 
   do_wrap_up(common);
 
@@ -61,11 +60,11 @@ int main() {
 }
 
 void do_one_thing(int *pnum_times) {
+
   int i, j, x;
   unsigned long k;
   int work;
   for (i = 0; i < 50; i++) {
-    // pthread_mutex_lock(&mut);
      sem_wait(&mutex);
     printf("doing one thing\n");
     work = *pnum_times;
@@ -74,9 +73,10 @@ void do_one_thing(int *pnum_times) {
     for (k = 0; k < 500000; k++)
       ;                 /* long cycle */
     *pnum_times = work; /* write back */
-	// pthread_mutex_unlock(&mut);
-     sem_post(&mutex);
+	 sem_post(&mutex);
+     
   }
+  
 }
 
 void do_another_thing(int *pnum_times) {
@@ -84,8 +84,7 @@ void do_another_thing(int *pnum_times) {
   unsigned long k;
   int work;
   for (i = 0; i < 50; i++) {
-    // pthread_mutex_lock(&mut);
-    sem_wait(&mutex);
+     sem_wait(&mutex);
     printf("doing another thing\n");
     work = *pnum_times;
     printf("counter = %d\n", work);
@@ -93,9 +92,10 @@ void do_another_thing(int *pnum_times) {
     for (k = 0; k < 500000; k++)
       ;                 /* long cycle */
     *pnum_times = work; /* write back */
-    // pthread_mutex_unlock(&mut);
-    sem_post(&mutex);
+     sem_post(&mutex);
   }
+ 
+
 }
 
 void do_wrap_up(int counter) {
