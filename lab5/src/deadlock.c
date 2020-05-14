@@ -1,61 +1,60 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
+#include<pthread.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include <unistd.h>
 
-static pthread_mutex_t mut1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mut2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock1, lock2;
 
-typedef struct {
-  int data;
-}
-data_t;
+void *resource1(){
 
-static void func1(data_t* d) {
-  printf("Start the first func\n");
-  pthread_mutex_lock(&mut1);
-  for (int i = d->data + 1; i != d->data; )
-    i++;
-  pthread_mutex_lock(&mut2);
-  for (int i = d->data - 1; i != d->data; )
-    i--;
-  pthread_mutex_unlock(&mut2);
-  pthread_mutex_unlock(&mut1);
-  printf("First function done \n");
-}
+pthread_mutex_lock(&lock1);
 
-static void func2(data_t* d) {
-  printf("Start the second func\n");
-  pthread_mutex_lock(&mut2);
-  for (int i = d->data + 1; i != d->data; )
-    i++;
-  pthread_mutex_lock(&mut1);
-  for (int i = d->data - 1; i != d->data; )
-    i--;
-  pthread_mutex_unlock(&mut1);
-  pthread_mutex_unlock(&mut2);
-  printf("Second function done \n");
+printf("Job started in resource1..\n");
+sleep(2);
+
+printf("Trying to get resource2\n");
+pthread_mutex_lock(&lock2); 
+printf("Aquired resource2\n");
+pthread_mutex_unlock(&lock2);
+
+printf("Job finished in resource1..\n");
+
+pthread_mutex_unlock(&lock1);
+
+pthread_exit(NULL);
 }
 
-int main(int argc, char* argv[]) {
-  pthread_t t1, t2;
-  data_t d = {1};
+void *resource2(){
 
-  if (pthread_create(&t1, NULL, (void*)func1, (void*)&d) != 0) {
-    printf("Error: cannot create first thread\n");
-    return -1;
-  }
-  if (pthread_create(&t2, NULL, (void*)func2, (void*)&d) != 0) {
-    printf("Error: cannot create second thread\n");
-    return -1;
-  }
+pthread_mutex_lock(&lock2);
 
-  if (pthread_join(t1, 0) != 0) {
-    printf("Error: cannot join first thread\n");
-    return -1;
-  }
+printf("Job started in resource2..\n");
+sleep(2);
 
-  if (pthread_join(t2, 0) != 0) {
-    printf("Error: cannot join second thread\n");
-    return -1;
-  }
+printf("Trying to get resource1\n");
+pthread_mutex_lock(&lock1); 
+printf("Aquired resource1\n");
+pthread_mutex_unlock(&lock1);
+
+printf("Job finished in resource2..\n");
+
+pthread_mutex_unlock(&lock2);
+
+pthread_exit(NULL);
+}
+
+int main() {
+
+pthread_mutex_init(&lock1,NULL);
+pthread_mutex_init(&lock2,NULL);
+
+pthread_t t1,t2;
+
+pthread_create(&t1,NULL,resource1,NULL);
+pthread_create(&t2,NULL,resource2,NULL);
+
+pthread_join(t1,NULL);
+pthread_join(t2,NULL);
+
+return 0;
 }
