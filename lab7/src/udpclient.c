@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  write(1, "Enter your messege\n", 13);
+  write(1, "Enter your message\n", 13);
 
   while ((n = read(0, sendline, buf_size)) > 0) {
     if (sendto(sockfd, sendline, n, 0, (SADDR *)&servaddr, SLEN) == -1) {
@@ -109,4 +109,4 @@ int main(int argc, char *argv[]) {
   }
   close(sockfd);
 }
-//./udpclient.out --buf_size 10 --ip 127.0.0.1 --port 255486
+//./udpclient.out --buf_size 10 --ip 127.0.0.1 --port 20001
